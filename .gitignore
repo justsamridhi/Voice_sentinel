@@ -37,17 +37,14 @@ venv.bak/
 *.swo
 
 # Datasets
-data/
-VoiceSentinel/data/
+/data/
 
 # Model Checkpoints & Outputs
-checkpoints/
-VoiceSentinel/checkpoints/
-outputs/
-VoiceSentinel/outputs/
+/checkpoints/
+/outputs/
 
 # Tensorboard
-runs/
+/runs/
 
 # Testing
 .pytest_cache/
