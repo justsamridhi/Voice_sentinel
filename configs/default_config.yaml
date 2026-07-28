@@ -1,0 +1,80 @@
+# VoiceSentinel Default Configuration File
+
+# General configuration
+experiment_name: "baseline_run"
+mode: "A"  # A: Baseline, B: Baseline + Paper 4, C: Baseline + Paper 2, D: Paper 4 + Paper 2
+device: "cuda"  # "cuda" or "cpu"
+seed: 42
+
+# Paths configuration
+paths:
+  data_dir: "data"
+  asvspoof_root: "data/ASVspoof2019"
+  checkpoint_dir: "checkpoints"
+  output_dir: "outputs"
+  tb_log_dir: "outputs/runs"
+
+# Audio fundamental properties
+audio:
+  sample_rate: 16000
+  duration: 4.0  # seconds
+  padding_type: "wrap"  # "zero" or "wrap"
+  crop_type: "random"  # "random" or "center"
+
+# Audio feature extraction details
+features:
+  type: "lfcc"  # "spectrogram", "lfcc", "double_spectrogram"
+  n_fft: 512
+  win_length: 400
+  hop_length: 160
+  n_lfcc: 60
+  n_mels: 80
+  f_min: 0.0
+  f_max: 8000.0
+
+# Paper 4 Augmentations
+augmentation:
+  enabled: false
+  compression:
+    enabled: false
+    codec: "mp3"  # "mp3", "aac"
+    bitrate: "64k"
+  channel:
+    enabled: false
+    impulse_response_path: null
+  spec_average:
+    enabled: false
+    time_mask_max: 30
+    freq_mask_max: 15
+
+# Model architecture hyperparameters
+model:
+  name: "resnet34"  # "resnet34", "sincnet_gat"
+  sincnet:
+    out_channels: 80
+    kernel_size: 251
+  gat:
+    in_features: 128
+    out_features: 64
+    heads: 4
+    dropout: 0.5
+  num_classes: 2
+
+# Training hyperparameters
+training:
+  epochs: 32
+  batch_size: 64
+  learning_rate: 0.0001
+  weight_decay: 0.0005
+  optimizer: "adam"  # "adam", "adamw", "sgd"
+  scheduler:
+    type: "cosine"  # "cosine", "step", "plateau", "none"
+    step_size: 10
+    gamma: 0.5
+    patience: 3
+  loss_type: "w_bce"  # "bce", "w_bce" (weighted BCE), "ce", "w_ce" (weighted CE)
+  class_weights: [1.0, 9.0]  # [weight_real, weight_spoof]
+  early_stopping:
+    enabled: true
+    patience: 5
+    min_delta: 0.0001
