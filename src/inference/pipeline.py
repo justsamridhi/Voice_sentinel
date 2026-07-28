@@ -98,8 +98,11 @@ class InferencePipeline:
         waveform_batch = waveform.unsqueeze(0).to(self.device)
 
         # Extract features and predict
-        features = self.feature_extractor(waveform_batch)
-        logits = self.model(features)
+        if self.config.model.name.lower() == "sincnet_gat":
+            logits = self.model(waveform_batch)
+        else:
+            features = self.feature_extractor(waveform_batch)
+            logits = self.model(features)
         probs = torch.softmax(logits, dim=-1).squeeze(0)
 
         spoof_prob = probs[1].item()

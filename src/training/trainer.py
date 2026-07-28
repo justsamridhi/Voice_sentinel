@@ -122,20 +122,23 @@ class Trainer:
             labels = labels.to(self.device)
 
             self.optimizer.zero_grad()
-            
-            # Extract features on-the-fly (features: B, channels, freq, time)
-            features = self.feature_extractor(waveforms)
-            
-            # Apply SpecAverage feature augmentation during training
-            if self.config.augmentation.enabled and self.config.augmentation.spec_average.enabled:
-                from src.features.augmentations import apply_spec_average
-                features = apply_spec_average(
-                    features,
-                    time_mask_max=self.config.augmentation.spec_average.time_mask_max,
-                    freq_mask_max=self.config.augmentation.spec_average.freq_mask_max
-                )
-            
-            logits = self.model(features)
+
+            # Model forward pass
+            if self.config.model.name.lower() == "sincnet_gat":
+                logits = self.model(waveforms)
+            else:
+                # Extract features on-the-fly (features: B, channels, freq, time)
+                features = self.feature_extractor(waveforms)
+                
+                # Apply SpecAverage feature augmentation during training
+                if self.config.augmentation.enabled and self.config.augmentation.spec_average.enabled:
+                    from src.features.augmentations import apply_spec_average
+                    features = apply_spec_average(
+                        features,
+                        time_mask_max=self.config.augmentation.spec_average.time_mask_max,
+                        freq_mask_max=self.config.augmentation.spec_average.freq_mask_max
+                    )
+                logits = self.model(features)
             
             if self.config.training.loss_type.lower() in ["bce", "w_bce"]:
                 log_odds = logits[:, 1] - logits[:, 0]
@@ -167,8 +170,11 @@ class Trainer:
             waveforms = waveforms.to(self.device)
             labels = labels.to(self.device)
 
-            features = self.feature_extractor(waveforms)
-            logits = self.model(features)
+            if self.config.model.name.lower() == "sincnet_gat":
+                logits = self.model(waveforms)
+            else:
+                features = self.feature_extractor(waveforms)
+                logits = self.model(features)
             
             if self.config.training.loss_type.lower() in ["bce", "w_bce"]:
                 log_odds = logits[:, 1] - logits[:, 0]
