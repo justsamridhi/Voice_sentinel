@@ -102,7 +102,8 @@ def main() -> None:
         duration=config.audio.duration,
         padding_type=config.audio.padding_type,
         crop_type=config.audio.crop_type,
-        cache=False
+        cache=False,
+        config=config
     )
     
     dev_dataset = ASVspoofDataset(

@@ -81,11 +81,20 @@ class Trainer:
         self.scheduler = scheduler
 
         # Set loss function
-        if class_weights is not None:
-            weights = class_weights.to(self.device)
-            self.criterion = nn.CrossEntropyLoss(weight=weights)
+        loss_type = self.config.training.loss_type.lower()
+        if loss_type in ["bce", "w_bce"]:
+            if class_weights is not None:
+                # class_weights: [weight_real, weight_spoof] -> pos_weight = weight_spoof / weight_real
+                pos_weight = torch.tensor([class_weights[1] / class_weights[0]])
+                self.criterion = nn.BCEWithLogitsLoss(pos_weight=pos_weight.to(self.device))
+            else:
+                self.criterion = nn.BCEWithLogitsLoss()
         else:
-            self.criterion = nn.CrossEntropyLoss()
+            if class_weights is not None:
+                weights = class_weights.to(self.device)
+                self.criterion = nn.CrossEntropyLoss(weight=weights)
+            else:
+                self.criterion = nn.CrossEntropyLoss()
 
         # Tensorboard writer
         log_dir = self.config.paths.tb_log_dir / self.config.experiment_name
@@ -117,8 +126,22 @@ class Trainer:
             # Extract features on-the-fly (features: B, channels, freq, time)
             features = self.feature_extractor(waveforms)
             
+            # Apply SpecAverage feature augmentation during training
+            if self.config.augmentation.enabled and self.config.augmentation.spec_average.enabled:
+                from src.features.augmentations import apply_spec_average
+                features = apply_spec_average(
+                    features,
+                    time_mask_max=self.config.augmentation.spec_average.time_mask_max,
+                    freq_mask_max=self.config.augmentation.spec_average.freq_mask_max
+                )
+            
             logits = self.model(features)
-            loss = self.criterion(logits, labels)
+            
+            if self.config.training.loss_type.lower() in ["bce", "w_bce"]:
+                log_odds = logits[:, 1] - logits[:, 0]
+                loss = self.criterion(log_odds, labels.float())
+            else:
+                loss = self.criterion(logits, labels)
             
             loss.backward()
             self.optimizer.step()
@@ -146,7 +169,12 @@ class Trainer:
 
             features = self.feature_extractor(waveforms)
             logits = self.model(features)
-            loss = self.criterion(logits, labels)
+            
+            if self.config.training.loss_type.lower() in ["bce", "w_bce"]:
+                log_odds = logits[:, 1] - logits[:, 0]
+                loss = self.criterion(log_odds, labels.float())
+            else:
+                loss = self.criterion(logits, labels)
 
             total_loss += loss.item() * waveforms.size(0)
             

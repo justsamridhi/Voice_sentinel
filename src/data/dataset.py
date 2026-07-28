@@ -1,4 +1,5 @@
 import logging
+import random
 from pathlib import Path
 from typing import Dict, Optional, Tuple, Union
 import pandas as pd
@@ -6,6 +7,8 @@ import torch
 from torch.utils.data import Dataset
 
 from src.utils.audio import load_audio, pad_crop_audio, normalize_audio
+from src.utils.config import Config
+from src.features.augmentations import compress_audio, apply_channel_effects
 
 logger = logging.getLogger(__name__)
 
@@ -98,7 +101,8 @@ class ASVspoofDataset(Dataset):
         duration: float = 4.0,
         padding_type: str = "wrap",
         crop_type: str = "random",
-        cache: bool = False
+        cache: bool = False,
+        config: Optional[Config] = None
     ):
         """Initializes the dataset and checks file presence.
 
@@ -120,6 +124,7 @@ class ASVspoofDataset(Dataset):
         self.padding_type = padding_type
         self.crop_type = crop_type
         self.cache = cache
+        self.config = config
 
         # Parse protocol
         self.df = ASVspoofProtocolParser.parse(self.protocol_file)
@@ -152,6 +157,27 @@ class ASVspoofDataset(Dataset):
         
         # Load waveform
         waveform, sr = load_audio(audio_path, target_sr=self.target_sr)
+        
+        # Apply raw audio augmentations if in training partition
+        if self.partition == "train" and self.config is not None and self.config.augmentation.enabled:
+            # Compression augmentation
+            comp_opt = self.config.augmentation.compression
+            if comp_opt.enabled and random.random() < 0.5:
+                waveform = compress_audio(
+                    waveform, 
+                    sample_rate=sr, 
+                    codec=comp_opt.codec, 
+                    bitrate=comp_opt.bitrate
+                )
+            
+            # Channel augmentation
+            chan_opt = self.config.augmentation.channel
+            if chan_opt.enabled and random.random() < 0.5:
+                waveform = apply_channel_effects(
+                    waveform, 
+                    sample_rate=sr, 
+                    ir_path=chan_opt.impulse_response_path
+                )
         
         # Normalize and pad/crop
         waveform = normalize_audio(waveform)
