@@ -23,12 +23,15 @@ def load_model_from_config(config: Config) -> nn.Module:
     model_name = config.model.name.lower()
     num_classes = config.model.num_classes
 
+    # Mode D (Combined Paper 2 + Paper 4) uses 2-channel stereo spectrogram features
+    in_channels = 2 if config.mode.upper() == "D" else 1
+
     if model_name in ["resnet34", "resnet"]:
         from src.models.baseline import ResNet34Baseline
-        return ResNet34Baseline(num_classes=num_classes)
+        return ResNet34Baseline(num_classes=num_classes, in_channels=in_channels)
     elif model_name in ["cnn_baseline", "cnn"]:
         from src.models.baseline import CNNBaseline
-        return CNNBaseline(num_classes=num_classes)
+        return CNNBaseline(num_classes=num_classes, in_channels=in_channels)
     elif model_name == "sincnet_gat":
         # Lazy load to avoid circular dependencies when Paper 2 is introduced
         from src.models.stereo_net import SincNetResidualGAT
@@ -73,6 +76,12 @@ class InferencePipeline:
             f_max=feat_opt.f_max
         ).to(self.device)
 
+        # Reconstruct converter for Mode D
+        self.m2s_converter = None
+        if self.config.mode.upper() == "D":
+            from src.models.stereo_net import M2SConverter
+            self.m2s_converter = M2SConverter(sample_rate=self.config.audio.sample_rate).to(self.device)
+
     @torch.no_grad()
     def predict(self, audio_path: Union[str, Path]) -> Dict[str, Any]:
         """Loads audio, extracts features, and outputs prediction.
@@ -100,6 +109,15 @@ class InferencePipeline:
         # Extract features and predict
         if self.config.model.name.lower() == "sincnet_gat":
             logits = self.model(waveform_batch)
+        elif self.config.mode.upper() == "D":
+            # Mode D: Combined Paper 2 + 4
+            # Convert mono raw waveform to stereo: shape (1, 2, samples)
+            stereo = self.m2s_converter(waveform_batch)
+            left_feat = self.feature_extractor(stereo[:, 0:1, :])   # (1, 1, freq, time)
+            right_feat = self.feature_extractor(stereo[:, 1:2, :])  # (1, 1, freq, time)
+            # Concatenate along channel dimension: (1, 2, freq, time)
+            features = torch.cat([left_feat, right_feat], dim=1)
+            logits = self.model(features)
         else:
             features = self.feature_extractor(waveform_batch)
             logits = self.model(features)
@@ -113,7 +131,9 @@ class InferencePipeline:
 
         return {
             "label": pred_label,
+            "spoof_prob": spoof_prob,
             "spoof_probability": spoof_prob,
+            "bonafide_prob": bonafide_prob,
             "bonafide_probability": bonafide_prob,
             "confidence": confidence
         }

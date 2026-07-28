@@ -80,6 +80,12 @@ class Trainer:
         self.optimizer = optimizer
         self.scheduler = scheduler
 
+        # Instantiate converter if Combined Mode D is enabled
+        self.m2s_converter = None
+        if self.config.mode.upper() == "D":
+            from src.models.stereo_net import M2SConverter
+            self.m2s_converter = M2SConverter(sample_rate=self.config.audio.sample_rate).to(self.device)
+
         # Set loss function
         loss_type = self.config.training.loss_type.lower()
         if loss_type in ["bce", "w_bce"]:
@@ -126,6 +132,23 @@ class Trainer:
             # Model forward pass
             if self.config.model.name.lower() == "sincnet_gat":
                 logits = self.model(waveforms)
+            elif self.config.mode.upper() == "D":
+                # Mode D: Combined Paper 2 + 4
+                with torch.no_grad():
+                    stereo = self.m2s_converter(waveforms)
+                left_feat = self.feature_extractor(stereo[:, 0:1, :])   # (batch, 1, freq, time)
+                right_feat = self.feature_extractor(stereo[:, 1:2, :])  # (batch, 1, freq, time)
+                features = torch.cat([left_feat, right_feat], dim=1)    # (batch, 2, freq, time)
+                
+                # Apply SpecAverage feature augmentation during training
+                if self.config.augmentation.enabled and self.config.augmentation.spec_average.enabled:
+                    from src.features.augmentations import apply_spec_average
+                    features = apply_spec_average(
+                        features,
+                        time_mask_max=self.config.augmentation.spec_average.time_mask_max,
+                        freq_mask_max=self.config.augmentation.spec_average.freq_mask_max
+                    )
+                logits = self.model(features)
             else:
                 # Extract features on-the-fly (features: B, channels, freq, time)
                 features = self.feature_extractor(waveforms)
@@ -172,6 +195,14 @@ class Trainer:
 
             if self.config.model.name.lower() == "sincnet_gat":
                 logits = self.model(waveforms)
+            elif self.config.mode.upper() == "D":
+                # Mode D: Combined Paper 2 + 4
+                with torch.no_grad():
+                    stereo = self.m2s_converter(waveforms)
+                left_feat = self.feature_extractor(stereo[:, 0:1, :])
+                right_feat = self.feature_extractor(stereo[:, 1:2, :])
+                features = torch.cat([left_feat, right_feat], dim=1)
+                logits = self.model(features)
             else:
                 features = self.feature_extractor(waveforms)
                 logits = self.model(features)
@@ -233,7 +264,8 @@ class Trainer:
             # Checkpoint saving
             if val_eer < best_eer:
                 best_eer = val_eer
-                best_metrics = val_metrics
+                best_metrics = val_metrics.copy()
+                best_metrics["loss"] = val_loss
                 self.save_checkpoint(epoch, val_loss, val_eer, is_best=True)
 
             # Periodic checkpoint

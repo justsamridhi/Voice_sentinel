@@ -42,6 +42,7 @@ venv.bak/
 # Model Checkpoints & Outputs
 /checkpoints/
 /outputs/
+/outputs_ablation/
 
 # Tensorboard
 /runs/
@@ -53,3 +54,6 @@ htmlcov/
 
 # Logs
 *.log
+
+# Scratch
+/scratch/

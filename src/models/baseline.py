@@ -6,12 +6,12 @@ import torchvision.models as models
 class CNNBaseline(nn.Module):
     """A lightweight 2D Convolutional Neural Network baseline for anti-spoofing."""
 
-    def __init__(self, num_classes: int = 2):
+    def __init__(self, num_classes: int = 2, in_channels: int = 1):
         """Initializes baseline CNN layers."""
         super().__init__()
         self.features = nn.Sequential(
             # Block 1
-            nn.Conv2d(1, 32, kernel_size=3, stride=1, padding=1),
+            nn.Conv2d(in_channels, 32, kernel_size=3, stride=1, padding=1),
             nn.BatchNorm2d(32),
             nn.ReLU(),
             nn.MaxPool2d(kernel_size=2, stride=2),
@@ -59,22 +59,23 @@ class CNNBaseline(nn.Module):
 class ResNet34Baseline(nn.Module):
     """ResNet34 adapted for single-channel audio feature inputs."""
 
-    def __init__(self, num_classes: int = 2, pretrained: bool = False):
+    def __init__(self, num_classes: int = 2, pretrained: bool = False, in_channels: int = 1):
         """Initializes ResNet34 and modifies input convolutional layer.
 
         Args:
             num_classes: Number of classification targets.
             pretrained: Whether to load ImageNet pre-trained weights.
+            in_channels: Number of input features channels (e.g. 1 for mono, 2 for stereo).
         """
         super().__init__()
         # Load torchvision resnet34 model
         weights = models.ResNet34_Weights.DEFAULT if pretrained else None
         self.resnet = models.resnet34(weights=weights)
 
-        # Replace first conv layer: change input channels from 3 (RGB) to 1 (Spectrogram/LFCC)
+        # Replace first conv layer: change input channels from 3 (RGB) to in_channels
         original_conv = self.resnet.conv1
         self.resnet.conv1 = nn.Conv2d(
-            in_channels=1,
+            in_channels=in_channels,
             out_channels=original_conv.out_channels,
             kernel_size=original_conv.kernel_size,
             stride=original_conv.stride,
