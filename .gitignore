@@ -40,7 +40,6 @@ venv.bak/
 /data/
 
 # Model Checkpoints & Outputs
-/checkpoints/
 /outputs/
 /outputs_ablation/
 
