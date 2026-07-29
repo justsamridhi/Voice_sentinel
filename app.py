@@ -139,8 +139,12 @@ def process_audio(audio_file, mode_str: str):
             None
         )
 
-    # Decode Mode
-    mode = mode_str[0]  # Extracts "A", "B", "C", or "D"
+    # Decode Mode letter (A, B, C, or D)
+    mode = "D"
+    for m_char in ["A", "B", "C", "D"]:
+        if m_char in mode_str:
+            mode = m_char
+            break
     pipeline = get_pipeline(mode)
 
     # 1. Run model prediction
@@ -194,93 +198,228 @@ def process_audio(audio_file, mode_str: str):
     )
 
 
-# Customized CSS to match premium design system
+# Customized CSS to match a premium, high-tech Cyber-Sentinel Command Center design
 custom_css = """
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap');
+
+:root {
+    color-scheme: dark;
+    --bg-main: #030712;
+    --card-bg: rgba(15, 23, 42, 0.75);
+    --card-border: rgba(255, 255, 255, 0.08);
+    --accent-cyan: #06b6d4;
+    --accent-blue: #3b82f6;
+    --accent-indigo: #6366f1;
+    --accent-emerald: #10b981;
+    --accent-rose: #f43f5e;
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
+}
+
 body {
-    background-color: #0f172a;
-    color: #e2e8f0;
+    background: radial-gradient(circle at 15% 15%, rgba(6, 182, 212, 0.12), transparent 40%),
+                radial-gradient(circle at 85% 75%, rgba(99, 102, 241, 0.12), transparent 45%),
+                linear-gradient(180deg, #030712 0%, #0b1329 50%, #030712 100%);
+    color: var(--text-primary);
+    font-family: 'Plus Jakarta Sans', -apple-system, sans-serif !important;
+    min-height: 100vh;
 }
+
 .gradio-container {
-    font-family: 'Outfit', 'Inter', sans-serif !important;
+    max-width: 1440px !important;
+    padding: 24px !important;
+    font-family: 'Plus Jakarta Sans', sans-serif !important;
 }
+
 #title-banner {
-    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-    border: 1px solid #334155;
-    border-radius: 12px;
-    padding: 24px;
+    background: linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(30, 41, 59, 0.85) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 24px;
+    padding: 24px 30px;
     margin-bottom: 24px;
-    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
 }
+
+#control-card, #result-card, #insight-card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 24px;
+    padding: 24px;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(20px);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+#control-card:hover, #result-card:hover, #insight-card:hover {
+    border-color: rgba(6, 182, 212, 0.3);
+    box-shadow: 0 20px 45px rgba(6, 182, 212, 0.1);
+}
+
 #analyze-btn {
-    background: linear-gradient(135deg, #0ea5e9 0%, #2563eb 100%);
-    color: white;
-    font-weight: bold;
+    background: linear-gradient(135deg, #06b6d4 0%, #3b82f6 50%, #6366f1 100%);
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 1.05rem;
+    letter-spacing: 0.02em;
     border: none;
-    transition: transform 0.2s;
+    border-radius: 14px;
+    padding: 14px 24px;
+    cursor: pointer;
+    box-shadow: 0 8px 25px rgba(6, 182, 212, 0.35);
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    margin-top: 12px;
 }
+
 #analyze-btn:hover {
     transform: translateY(-2px);
+    box-shadow: 0 12px 30px rgba(6, 182, 212, 0.5);
+    filter: brightness(1.1);
+}
+
+#analyze-btn:active {
+    transform: translateY(0);
+}
+
+.pill-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    margin: 4px 6px 4px 0;
+    border-radius: 999px;
+    background: rgba(15, 23, 42, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: #e2e8f0;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.pill-chip-glow {
+    background: rgba(6, 182, 212, 0.15);
+    border-color: rgba(6, 182, 212, 0.4);
+    color: #67e8f9;
+}
+
+.status-pulse {
+    width: 9px;
+    height: 9px;
+    background-color: #10b981;
+    border-radius: 50%;
+    box-shadow: 0 0 10px #10b981;
+    display: inline-block;
+    margin-right: 6px;
+}
+
+.gradio-container label span {
+    color: #cbd5e1 !important;
+    font-weight: 600 !important;
+    font-size: 0.92rem !important;
+}
+
+.gradio-container .gr-box, .gradio-container .gr-input {
+    background-color: rgba(15, 23, 42, 0.6) !important;
+    border-color: rgba(255, 255, 255, 0.1) !important;
+    border-radius: 14px !important;
 }
 """
 
-with gr.Blocks() as demo:
+with gr.Blocks(
+    css=custom_css,
+    theme=gr.themes.Soft(
+        primary_hue="cyan",
+        secondary_hue="indigo",
+        neutral_hue="slate",
+        radius_size="lg"
+    )
+) as demo:
     with gr.Row(elem_id="title-banner"):
-        with gr.Column():
+        with gr.Column(scale=3):
             gr.Markdown(
                 """
-                # 🛡️ VoiceSentinel
-                ### Robust & Stereo-Aware Audio Deepfake Detection
-                *VoiceSentinel combines advanced dual-branch convolutional attention architectures with robust in-memory codec augmentations to detect synthetic, text-to-speech (TTS), voice-converted, and replayed spoofing attacks.*
+                <div style="display:flex; flex-direction:column; gap:8px;">
+                  <div style="display:flex; align-items:center; gap:12px;">
+                    <span style="font-size:2.2rem;">🛡️</span>
+                    <div>
+                      <h1 style="margin:0; font-size:2.1rem; font-weight:800; tracking: -0.02em; background: linear-gradient(135deg, #f8fafc 0%, #38bdf8 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">VoiceSentinel</h1>
+                      <div style="font-size:0.85rem; color:#94a3b8; font-weight:500;">Research-Grade Audio Deepfake & Voice Spoof Detection System</div>
+                    </div>
+                  </div>
+                  <div style="margin-top:6px; display:flex; flex-wrap:wrap; align-items:center;">
+                    <span class="pill-chip pill-chip-glow"><span class="status-pulse"></span>Sentinel Engine Active</span>
+                    <span class="pill-chip">⚡ Real-Time Audio Diagnostics</span>
+                    <span class="pill-chip">🎧 Mono-to-Stereo Aware (M2S)</span>
+                    <span class="pill-chip">🔬 LFCC & Log-Spectrogram</span>
+                  </div>
+                </div>
+                """
+            )
+        with gr.Column(scale=1):
+            gr.Markdown(
+                """
+                <div style="text-align:right; color:#e2e8f0; background: rgba(15, 23, 42, 0.6); padding: 14px 18px; border-radius: 16px; border: 1px solid rgba(255, 255, 255, 0.08);">
+                  <div style="font-size:0.8rem; text-transform:uppercase; letter-spacing:0.05em; color:#38bdf8; font-weight:700;">System Status</div>
+                  <div style="font-size:1.1rem; font-weight:700; margin-top:2px;">Defense Operational</div>
+                  <div style="font-size:0.82rem; color:#94a3b8; margin-top:2px;">PyTorch 2.0+ / Gradio Dashboard</div>
+                </div>
                 """
             )
 
     with gr.Row():
-        with gr.Column(scale=1):
-            gr.Markdown("### 📂 Input Audio & Configuration")
-            audio_input = gr.Audio(type="filepath", label="Upload Audio File (wav, mp3, flac)")
-            
+        with gr.Column(scale=1, elem_id="control-card"):
+            gr.Markdown("### 🎛️ Audio Input & Pipeline Config")
+            audio_input = gr.Audio(type="filepath", label="Upload Audio File (WAV, MP3, FLAC)")
+
             mode_dropdown = gr.Dropdown(
                 choices=[
-                    "A (Baseline - Mono LFCC + ResNet34)",
-                    "B (Paper 4 - LogSpec + SpecAverage + BCE)",
-                    "C (Paper 2 - M2S + SincNet + ResNet + GAT)",
-                    "D (Combined Mode - Stereo LogSpec + ResNet34)"
+                    "Mode A: Standard Acoustic Analysis (Mono LFCC + ResNet34)",
+                    "Mode B: Robust Data Augmentation Pipeline (LogSpec + SpecAverage + BCE)",
+                    "Mode C: Spatial-Graph Attention Neural Pipeline (M2S + SincNet + GAT)",
+                    "Mode D: Comprehensive Stereo Analysis (Stereo LogSpec + ResNet34)"
                 ],
-                value="D (Combined Mode - Stereo LogSpec + ResNet34)",
-                label="Select Detection Mode"
+                value="Mode D: Comprehensive Stereo Analysis (Stereo LogSpec + ResNet34)",
+                label="Select Detection Pipeline"
             )
-            
+
             gr.Examples(
                 examples=[
-                    ["scratch/test.wav", "D (Combined Mode - Stereo LogSpec + ResNet34)"],
-                    ["scratch/test.wav", "A (Baseline - Mono LFCC + ResNet34)"]
+                    ["scratch/test.wav", "Mode D: Comprehensive Stereo Analysis (Stereo LogSpec + ResNet34)"],
+                    ["scratch/test.wav", "Mode A: Standard Acoustic Analysis (Mono LFCC + ResNet34)"]
                 ],
                 inputs=[audio_input, mode_dropdown],
-                label="Click an Example Audio to Test"
+                label="Quick Test Examples"
             )
-            
-            analyze_button = gr.Button("⚡ Analyze Audio", elem_id="analyze-btn")
 
-        with gr.Column(scale=1):
-            gr.Markdown("### 🔍 Sentinel Diagnostics")
-            pred_text = gr.Textbox(label="Sentinel Prediction Label", interactive=False)
-            conf_bar = gr.Label(label="Confidence Distribution")
-            
-            with gr.Accordion("📊 Audio File Metadata", open=True):
-                stats_markdown = gr.Markdown("Upload file and press Analyze to display info.")
+            analyze_button = gr.Button("⚡ Run Deepfake Diagnostic", elem_id="analyze-btn")
+
+            gr.Markdown(
+                """
+                <div style="margin-top:12px; font-size:0.83rem; color:#94a3b8; line-height:1.4;">
+                  Select a deepfake detection pipeline above and submit audio to generate real-time acoustic threat diagnostics and spectral feature visualizers.
+                </div>
+                """
+            )
+
+        with gr.Column(scale=1, elem_id="result-card"):
+            gr.Markdown("### 🔐 Sentinel Security Verdict")
+            pred_text = gr.Textbox(value="Awaiting audio analysis...", label="Authenticity Classification", interactive=False)
+            conf_bar = gr.Label(label="Confidence & Probability Breakdown")
+
+            with gr.Accordion("📊 Audio Metadata & Diagnostics", open=True):
+                stats_markdown = gr.Markdown("Upload an audio file and initiate analysis to inspect acoustic properties.")
 
     with gr.Row():
-        with gr.Column():
-            gr.Markdown("### 📈 Acoustic Visualizations")
+        with gr.Column(elem_id="insight-card"):
+            gr.Markdown("### 📈 Deep Acoustic Feature Visualizers")
             with gr.Tabs():
-                with gr.TabItem("Waveform"):
-                    wave_plot = gr.Plot(label="Time Domain Waveform")
-                with gr.TabItem("Spectrum (FFT)"):
-                    fft_plot = gr.Plot(label="Frequency Magnitude Spectrum")
-                with gr.TabItem("Spectrogram"):
-                    spec_plot = gr.Plot(label="Log-Spectrogram Magnitude Heatmap")
-                with gr.TabItem("LFCC Cepstrum"):
-                    lfcc_plot = gr.Plot(label="LFCC Cepstrum Coefficients Heatmap")
+                with gr.TabItem("Waveform (Time Domain)"):
+                    wave_plot = gr.Plot(label="Time Domain Waveform Plot")
+                with gr.TabItem("Magnitude Spectrum (FFT)"):
+                    fft_plot = gr.Plot(label="Frequency Magnitude Spectrum Plot")
+                with gr.TabItem("Log-Spectrogram Heatmap"):
+                    spec_plot = gr.Plot(label="Log-Spectrogram Magnitude Map")
+                with gr.TabItem("LFCC Cepstral Map"):
+                    lfcc_plot = gr.Plot(label="Linear Frequency Cepstral Coefficients Map")
 
     # Connect callback
     analyze_button.click(
@@ -298,4 +437,5 @@ with gr.Blocks() as demo:
     )
 
 if __name__ == "__main__":
-    demo.launch(server_name="127.0.0.1", server_port=7860, theme=gr.themes.Soft(), css=custom_css)
+    demo.launch(server_name="127.0.0.1", server_port=7860)
+
