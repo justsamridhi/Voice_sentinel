@@ -139,12 +139,8 @@ def process_audio(audio_file, mode_str: str):
             None
         )
 
-    # Decode Mode letter (A, B, C, or D)
-    mode = "D"
-    for m_char in ["A", "B", "C", "D"]:
-        if m_char in mode_str:
-            mode = m_char
-            break
+    # Decode Mode
+    mode = mode_str[0]  # Extracts "A", "B", "C", or "D"
     pipeline = get_pipeline(mode)
 
     # 1. Run model prediction
@@ -198,523 +194,171 @@ def process_audio(audio_file, mode_str: str):
     )
 
 
-# Premium Web3/SaaS theme CSS for the Gradio app
+# Customized CSS to match a premium, modern dashboard design
 custom_css = """
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
-
 :root {
     color-scheme: dark;
-    --bg-0: #070B0E;
-    --bg-1: #111C24;
-    --bg-2: #0D1620;
-    --card: rgba(20, 30, 40, 0.40);
-    --card-strong: rgba(24, 36, 48, 0.70);
-    --border: rgba(255, 255, 255, 0.08);
-    --border-strong: rgba(255, 255, 255, 0.14);
-    --text: #E2E8F0;
-    --muted: #94A3B8;
-    --accent: #4FD1C5;
-    --accent-soft: rgba(79, 209, 197, 0.16);
 }
-
 body {
-    background:
-        radial-gradient(circle at top center, #111C24 0%, transparent 42%),
-        linear-gradient(180deg, var(--bg-1) 0%, var(--bg-0) 100%);
-    color: var(--text) !important;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
-    min-height: 100vh;
-    margin: 0;
+    background: radial-gradient(circle at top left, rgba(14, 165, 233, 0.15), transparent 28%),
+                linear-gradient(135deg, #020617 0%, #0f172a 45%, #111827 100%);
+    color: #f8fafc;
 }
-
 .gradio-container {
     max-width: 1400px !important;
-    margin: 0 auto;
-    padding: 36px 48px 96px !important;
-    background: transparent !important;
+    padding: 24px !important;
+    font-family: 'Inter', 'Segoe UI', sans-serif !important;
 }
-
-#app-shell {
-    display: flex;
-    flex-direction: column;
-    gap: 36px;
-}
-
-#navbar-banner,
-#hero-card,
-#control-card,
-#result-card,
-#insight-card,
-.saas-card-box {
-    background: var(--card);
-    border: 1px solid var(--border);
-    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.24);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-}
-
-#navbar-banner {
-    border-radius: 20px;
-    padding: 16px 24px;
-    position: sticky;
-    top: 12px;
-    z-index: 10;
-}
-
-#hero-card {
-    border-radius: 28px;
-    padding: 5rem 3rem;
-    text-align: center;
-    border: 1px solid var(--border-strong);
-}
-
-#control-card,
-#result-card,
-#insight-card {
+#title-banner {
+    background: linear-gradient(135deg, rgba(14, 165, 233, 0.2), rgba(37, 99, 235, 0.3));
+    border: 1px solid rgba(148, 163, 184, 0.25);
     border-radius: 24px;
-    padding: 32px;
-    transition: transform 0.3s ease, border-color 0.3s ease;
-}
-
-#control-card:hover,
-#result-card:hover,
-#insight-card:hover,
-.saas-card-box:hover {
-    transform: translateY(-2px);
-    border-color: var(--border-strong);
-}
-
-.saas-card-box {
-    border-radius: 20px;
-    padding: 28px;
-    height: 100%;
-}
-
-.section-title {
-    font-size: 1.8rem;
-    font-weight: 700;
-    color: var(--text);
-    margin: 12px 0 22px;
-    letter-spacing: -0.02em;
-}
-
-.pill-chip {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 10px 16px;
-    border-radius: 999px;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    color: var(--text);
-    font-size: 0.88rem;
-    font-weight: 600;
-}
-
-.hero-badge {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 10px 18px;
-    border-radius: 999px;
-    background: var(--accent-soft);
-    color: #B8F7EF;
-    font-size: 0.82rem;
-    font-weight: 700;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
+    padding: 24px 28px;
     margin-bottom: 20px;
+    box-shadow: 0 18px 45px rgba(2, 6, 23, 0.35);
+    backdrop-filter: blur(16px);
 }
-
+#title-banner .markdown {
+    color: #f8fafc;
+}
+#control-card, #result-card, #insight-card {
+    background: rgba(15, 23, 42, 0.8);
+    border: 1px solid rgba(148, 163, 184, 0.22);
+    border-radius: 20px;
+    padding: 18px;
+    box-shadow: 0 12px 30px rgba(2, 6, 23, 0.25);
+    backdrop-filter: blur(16px);
+}
 #analyze-btn {
-    width: 100%;
-    border-radius: 14px !important;
-    padding: 12px 18px !important;
-    font-weight: 700 !important;
-    border: 1px solid rgba(255, 255, 255, 0.10) !important;
-    color: #051014 !important;
-    background: linear-gradient(135deg, var(--accent) 0%, #35B4A8 100%) !important;
-    box-shadow: 0 8px 20px rgba(79, 209, 197, 0.18) !important;
-}
-
-#analyze-btn:hover {
-    transform: translateY(-1px);
-}
-
-.gradio-container label span {
-    color: var(--text) !important;
-    font-weight: 600 !important;
-    font-size: 0.96rem !important;
-}
-
-.gradio-container .gr-box,
-.gradio-container .gr-input,
-.gradio-container input,
-.gradio-container select,
-.gradio-container textarea,
-.gradio-container .block {
-    background: rgba(255, 255, 255, 0.04) !important;
-    border: 1px solid rgba(255, 255, 255, 0.08) !important;
-    color: var(--text) !important;
-    border-radius: 14px !important;
-}
-
-.gradio-container input:focus,
-.gradio-container select:focus,
-.gradio-container textarea:focus {
-    border-color: rgba(79, 209, 197, 0.55) !important;
-    box-shadow: 0 0 0 2px rgba(79, 209, 197, 0.16) !important;
-}
-
-.gradio-container h1,
-.gradio-container h2,
-.gradio-container h3,
-.gradio-container h4 {
-    color: var(--text) !important;
-}
-
-.gradio-container p,
-.gradio-container span,
-.gradio-container .markdown {
-    color: var(--muted);
-}
-
-.gradio-container .tab-nav {
-    border-bottom: 1px solid rgba(255, 255, 255, 0.10) !important;
-    margin-bottom: 18px;
-}
-
-.gradio-container .gr-row {
-    gap: 28px;
-}
-
-.gradio-container .tab-nav button {
-    color: var(--muted) !important;
-    background: transparent !important;
-    border: none !important;
-    border-radius: 0 !important;
-    padding: 10px 14px !important;
-    font-weight: 600 !important;
-}
-
-.gradio-container .tab-nav button.selected {
-    color: var(--text) !important;
-    background: transparent !important;
-    border-bottom: 2px solid var(--accent) !important;
-}
-
-#prediction-box textarea {
-    min-height: 72px;
-    font-size: 1rem;
+    background: linear-gradient(135deg, #14b8a6 0%, #2563eb 100%);
+    color: white;
     font-weight: 700;
+    border: none;
+    border-radius: 999px;
+    padding: 12px 18px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 8px 20px rgba(37, 99, 235, 0.25);
 }
-
-#confidence-box {
-    margin-top: 10px;
+#analyze-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 24px rgba(37, 99, 235, 0.35);
 }
-
-#stats-box {
-    padding: 10px 0;
+.pill-chip {
+    display: inline-block;
+    padding: 7px 12px;
+    margin: 4px 6px 0 0;
+    border-radius: 999px;
+    background: rgba(15, 23, 42, 0.45);
+    border: 1px solid rgba(148, 163, 184, 0.25);
+    color: #dbeafe;
+    font-size: 0.9rem;
 }
 """
 
 with gr.Blocks(
     css=custom_css,
-    theme=gr.themes.Base(
-        primary_hue="slate",
-        secondary_hue="slate",
-        neutral_hue="slate"
+    theme=gr.themes.Soft(
+        primary_hue="blue",
+        secondary_hue="indigo",
+        neutral_hue="slate",
+        radius_size="lg"
     )
 ) as demo:
-    with gr.Column(elem_id="app-shell"):
-        # SECTION 1: STICKY NAVBAR
-        with gr.Row(elem_id="navbar-banner"):
-            with gr.Column(scale=2):
-                gr.Markdown(
-                    """
-                    <div style="display:flex; align-items:center; gap:12px;">
-                      <span style="font-size:1.25rem; font-weight:700; color:#FFFFFF; letter-spacing:-0.01em;">VoiceSentinel</span>
-                      <span class="pill-chip" style="margin-left:8px;">v2.4 Production</span>
-                    </div>
-                    """
-                )
-            with gr.Column(scale=3):
-                gr.Markdown(
-                    """
-                    <div style="display:flex; justify-content:flex-end; align-items:center; gap:18px; font-size:0.9rem;">
-                      <a href="#about" style="color:#E5E4E2; text-decoration:none; opacity:0.9;">About</a>
-                      <a href="#features" style="color:#E5E4E2; text-decoration:none; opacity:0.9;">Features</a>
-                      <a href="#workflow" style="color:#E5E4E2; text-decoration:none; opacity:0.9;">Workflow</a>
-                      <a href="#studio" style="color:#FFFFFF; text-decoration:none; font-weight:700; background:rgba(92,124,250,0.18); padding:6px 12px; border-radius:999px; border:1px solid rgba(92,124,250,0.25);">Launch Studio</a>
-                    </div>
-                    """
-                )
+    with gr.Row(elem_id="title-banner"):
+        with gr.Column(scale=2):
+            gr.Markdown(
+                """
+                <div style="display:flex; flex-direction:column; gap:6px;">
+                  <h1 style="margin:0; font-size:2rem;">🛡️ VoiceSentinel</h1>
+                  <p style="margin:0; font-size:1rem; color:#dbeafe;">
+                    Robust audio deepfake detection with a polished, premium interface and rich acoustic diagnostics.
+                  </p>
+                  <div style="margin-top:6px;">
+                    <span class="pill-chip">Live inference</span>
+                    <span class="pill-chip">Multi-mode analysis</span>
+                    <span class="pill-chip">Visual insights</span>
+                  </div>
+                </div>
+                """
+            )
+        with gr.Column(scale=1):
+            gr.Markdown(
+                """
+                <div style="text-align:right; color:#e2e8f0;">
+                  <div style="font-size:0.95rem; opacity:0.85;">Detection ready</div>
+                  <div style="font-size:1.15rem; font-weight:700;">Stereo-aware, research-grade analysis</div>
+                </div>
+                """
+            )
 
-        # SECTION 2: HERO & INTRODUCTION
-        with gr.Row(elem_id="hero-card"):
-            with gr.Column():
-                gr.Markdown(
-                    """
-                    <div style="max-width:900px; margin:0 auto;">
-                      <div class="hero-badge">Enterprise Voice Authenticity Platform</div>
-                      <h1 style="font-size:2.65rem; font-weight:800; color:#FFFFFF; margin:0 0 16px 0; line-height:1.15; letter-spacing:-0.02em;">
-                        Detect Synthetic Voice Clones & Audio Deepfakes in Real Time
-                      </h1>
-                      <p style="font-size:1.05rem; color:#DDE5F0; opacity:0.9; line-height:1.7; margin-bottom:24px;">
-                        VoiceSentinel unifies robust mono-to-stereo graph attention neural networks and rich LFCC/spectrogram diagnostics into a premium defense suite.
-                      </p>
-                      <div style="display:flex; justify-content:center; gap:10px; flex-wrap:wrap;">
-                        <span class="pill-chip">Research-Grade Anti-Spoofing</span>
-                        <span class="pill-chip">🎧 Stereo Spatial Awareness</span>
-                        <span class="pill-chip">⚡ Sub-Second Inference</span>
-                      </div>
-                    </div>
-                    """
-                )
+    with gr.Row():
+        with gr.Column(scale=1, elem_id="control-card"):
+            gr.Markdown("### 🎛️ Upload Audio & Configure")
+            audio_input = gr.Audio(type="filepath", label="Upload Audio File (wav, mp3, flac)")
 
-        # SECTION 3: ABOUT / OVERVIEW
-        with gr.Row(elem_id="about"):
-            with gr.Column(scale=1):
-                gr.Markdown(
-                    """
-                    <div class="saas-card-box">
-                      <h3 style="font-size:1.25rem; color:#FFFFFF; margin-top:0;">Why VoiceSentinel?</h3>
-                      <p style="font-size:0.95rem; color:#DDE5F0; opacity:0.9; line-height:1.6; margin:0;">
-                        Generative AI voice cloning technology poses major security risks for biometrics and media integrity. VoiceSentinel acts as a layered defense, analyzing microscopic acoustic artifacts and stereo spatial phase discrepancies that synthetic audio generators rarely replicate.
-                      </p>
-                    </div>
-                    """
-                )
-            with gr.Column(scale=1):
-                gr.Markdown(
-                    """
-                    <div class="saas-card-box">
-                      <h3 style="font-size:1.25rem; color:#FFFFFF; margin-top:0;">Core Pillars</h3>
-                      <ul style="padding-left:20px; font-size:0.95rem; color:#DDE5F0; opacity:0.9; line-height:1.8; margin-bottom:0;">
-                        <li><strong>M2S Stereo Defense:</strong> Converts mono audio to stereo graphs for spatial anomaly detection.</li>
-                        <li><strong>Robust Feature Engineering:</strong> LFCC cepstrals and log-spectrogram magnitude mapping.</li>
-                        <li><strong>Ablation Validated:</strong> Unified multi-mode neural backbones (ResNet34, SincNet, GAT).</li>
-                      </ul>
-                    </div>
-                    """
-                )
+            mode_dropdown = gr.Dropdown(
+                choices=[
+                    "A (Baseline - Mono LFCC + ResNet34)",
+                    "B (Paper 4 - LogSpec + SpecAverage + BCE)",
+                    "C (Paper 2 - M2S + SincNet + ResNet + GAT)",
+                    "D (Combined Mode - Stereo LogSpec + ResNet34)"
+                ],
+                value="D (Combined Mode - Stereo LogSpec + ResNet34)",
+                label="Select Detection Mode"
+            )
 
-        # SECTION 4: FEATURES & CAPABILITIES
-        gr.Markdown("<div style='height:24px;'></div>")
-        gr.Markdown("<div class='section-title'>Platform Capabilities</div>")
-        with gr.Row(elem_id="features"):
-            with gr.Column(scale=1):
-                gr.Markdown(
-                    """
-                    <div class="saas-card-box">
-                      <div style="font-size:1.35rem; margin-bottom:8px;">🎧</div>
-                      <h4 style="font-size:1.05rem; color:#FFFFFF; margin:0 0 8px 0;">Stereo Spatial Awareness</h4>
-                      <p style="font-size:0.9rem; color:#DDE5F0; opacity:0.85; line-height:1.55; margin:0;">
-                        Mono-to-Stereo conversion exposes phase irregularities and synthetic spatial artifacts across left and right channels.
-                      </p>
-                    </div>
-                    """
-                )
-            with gr.Column(scale=1):
-                gr.Markdown(
-                    """
-                    <div class="saas-card-box">
-                      <div style="font-size:1.35rem; margin-bottom:8px;">🔬</div>
-                      <h4 style="font-size:1.05rem; color:#FFFFFF; margin:0 0 8px 0;">Dual Spectral Extraction</h4>
-                      <p style="font-size:0.9rem; color:#DDE5F0; opacity:0.85; line-height:1.55; margin:0;">
-                        Extracts LFCC and log-spectrogram features for complete frequency-band analysis.
-                      </p>
-                    </div>
-                    """
-                )
-            with gr.Column(scale=1):
-                gr.Markdown(
-                    """
-                    <div class="saas-card-box">
-                      <div style="font-size:1.35rem; margin-bottom:8px;">🧠</div>
-                      <h4 style="font-size:1.05rem; color:#FFFFFF; margin:0 0 8px 0;">Graph Attention Networks</h4>
-                      <p style="font-size:0.9rem; color:#DDE5F0; opacity:0.85; line-height:1.55; margin:0;">
-                        SincNet filterbanks combined with GAT neural networks evaluate contextual relationships between frequency nodes.
-                      </p>
-                    </div>
-                    """
-                )
+            gr.Examples(
+                examples=[
+                    ["scratch/test.wav", "D (Combined Mode - Stereo LogSpec + ResNet34)"],
+                    ["scratch/test.wav", "A (Baseline - Mono LFCC + ResNet34)"]
+                ],
+                inputs=[audio_input, mode_dropdown],
+                label="Try an Example"
+            )
 
-        # SECTION 5: HOW IT WORKS WORKFLOW
-        gr.Markdown("<div style='height:24px;'></div>")
-        gr.Markdown("<div class='section-title'>Detection Workflow</div>")
-        with gr.Row(elem_id="workflow"):
-            with gr.Column(scale=1):
-                gr.Markdown(
-                    """
-                    <div class="saas-card-box" style="text-align:center;">
-                      <div style="font-size:0.8rem; font-weight:700; color:#7CE7D6; text-transform:uppercase;">Step 01</div>
-                      <h4 style="color:#FFFFFF; margin:6px 0;">Upload Audio</h4>
-                      <p style="font-size:0.85rem; opacity:0.8;">Submit WAV, MP3, or FLAC audio samples.</p>
-                    </div>
-                    """
-                )
-            with gr.Column(scale=1):
-                gr.Markdown(
-                    """
-                    <div class="saas-card-box" style="text-align:center;">
-                      <div style="font-size:0.8rem; font-weight:700; color:#7CE7D6; text-transform:uppercase;">Step 02</div>
-                      <h4 style="color:#FFFFFF; margin:6px 0;">Select Pipeline</h4>
-                      <p style="font-size:0.85rem; opacity:0.8;">Choose from Modes A, B, C, or D.</p>
-                    </div>
-                    """
-                )
-            with gr.Column(scale=1):
-                gr.Markdown(
-                    """
-                    <div class="saas-card-box" style="text-align:center;">
-                      <div style="font-size:0.8rem; font-weight:700; color:#7CE7D6; text-transform:uppercase;">Step 03</div>
-                      <h4 style="color:#FFFFFF; margin:6px 0;">Neural Inference</h4>
-                      <p style="font-size:0.85rem; opacity:0.8;">PyTorch engine evaluates acoustic features.</p>
-                    </div>
-                    """
-                )
-            with gr.Column(scale=1):
-                gr.Markdown(
-                    """
-                    <div class="saas-card-box" style="text-align:center;">
-                      <div style="font-size:0.8rem; font-weight:700; color:#7CE7D6; text-transform:uppercase;">Step 04</div>
-                      <h4 style="color:#FFFFFF; margin:6px 0;">Verdict & Visuals</h4>
-                      <p style="font-size:0.85rem; opacity:0.8;">Receive authenticity classification & charts.</p>
-                    </div>
-                    """
-                )
+            analyze_button = gr.Button("⚡ Analyze Audio", elem_id="analyze-btn")
 
-        # SECTION 6: CORE FUNCTIONALITY (INTERACTIVE STUDIO)
-        gr.Markdown("<div style='height:24px;'></div>")
-        gr.Markdown("<div class='section-title'>Interactive Detection Studio</div>")
-        with gr.Row(elem_id="studio"):
-            with gr.Column(scale=1, elem_id="control-card"):
-                gr.Markdown("### 🎛️ Audio Input & Pipeline Config")
-                audio_input = gr.Audio(type="filepath", label="Upload Audio File (WAV, MP3, FLAC)")
+            gr.Markdown("Choose a detection pipeline and inspect the prediction in a streamlined, modern workflow.")
 
-                mode_dropdown = gr.Dropdown(
-                    choices=[
-                        "Mode A: Standard Acoustic Analysis (Mono LFCC + ResNet34)",
-                        "Mode B: Robust Data Augmentation Pipeline (LogSpec + SpecAverage + BCE)",
-                        "Mode C: Spatial-Graph Attention Neural Pipeline (M2S + SincNet + GAT)",
-                        "Mode D: Comprehensive Stereo Analysis (Stereo LogSpec + ResNet34)"
-                    ],
-                    value="Mode D: Comprehensive Stereo Analysis (Stereo LogSpec + ResNet34)",
-                    label="Select Detection Pipeline"
-                )
+        with gr.Column(scale=1, elem_id="result-card"):
+            gr.Markdown("### 🔐 Sentinel Diagnostics")
+            pred_text = gr.Textbox(value="Awaiting analysis...", label="Sentinel Prediction Label", interactive=False)
+            conf_bar = gr.Label(label="Confidence Distribution")
 
-                gr.Examples(
-                    examples=[
-                        ["scratch/test.wav", "Mode D: Comprehensive Stereo Analysis (Stereo LogSpec + ResNet34)"],
-                        ["scratch/test.wav", "Mode A: Standard Acoustic Analysis (Mono LFCC + ResNet34)"]
-                    ],
-                    inputs=[audio_input, mode_dropdown],
-                    label="Quick Test Examples"
-                )
+            with gr.Accordion("📊 Audio File Metadata", open=True):
+                stats_markdown = gr.Markdown("Upload a file and press Analyze to display audio details.")
 
-            with gr.Column(scale=1, elem_id="result-card"):
-                gr.Markdown("### 🔐 Sentinel Security Verdict")
-                pred_text = gr.Textbox(value="Awaiting audio analysis...", label="Authenticity Classification", interactive=False, elem_id="prediction-box")
-                conf_bar = gr.Label(label="Confidence & Probability Breakdown", elem_id="confidence-box")
-
-                with gr.Accordion("📊 Audio Metadata & Diagnostics", open=True):
-                    stats_markdown = gr.Markdown("Upload an audio file and initiate analysis to inspect acoustic properties.", elem_id="stats-box")
-
-        with gr.Row():
-            analyze_button = gr.Button("Run Deepfake Analysis", elem_id="analyze-btn")
-
-        # SECTION 7: ANALYTICS / VISUALIZERS
-        gr.Markdown("<div style='height:24px;'></div>")
+    with gr.Row():
         with gr.Column(elem_id="insight-card"):
-            gr.Markdown("### 📈 Deep Acoustic Feature Visualizers")
+            gr.Markdown("### 📈 Acoustic Visualizations")
             with gr.Tabs():
                 with gr.TabItem("Waveform"):
-                    wave_plot = gr.Plot(label="Time Domain Waveform Plot")
-                with gr.TabItem("FFT"):
-                    fft_plot = gr.Plot(label="Frequency Magnitude Spectrum Plot")
+                    wave_plot = gr.Plot(label="Time Domain Waveform")
+                with gr.TabItem("Spectrum (FFT)"):
+                    fft_plot = gr.Plot(label="Frequency Magnitude Spectrum")
                 with gr.TabItem("Spectrogram"):
-                    spec_plot = gr.Plot(label="Log-Spectrogram Magnitude Map")
-                with gr.TabItem("LFCC"):
-                    lfcc_plot = gr.Plot(label="Linear Frequency Cepstral Coefficients Map")
+                    spec_plot = gr.Plot(label="Log-Spectrogram Magnitude Heatmap")
+                with gr.TabItem("LFCC Cepstrum"):
+                    lfcc_plot = gr.Plot(label="LFCC Cepstrum Coefficients Heatmap")
 
-        # SECTION 8: RESEARCH TRUST BENCHMARKS
-        gr.Markdown("<div style='height:24px;'></div>")
-        gr.Markdown("<div class='section-title'>Research & Validation Benchmarks</div>")
-        with gr.Row():
-            with gr.Column(scale=1):
-                gr.Markdown(
-                    """
-                    <div class="saas-card-box">
-                      <div style="font-size:0.8rem; font-weight:700; color:#7CE7D6; text-transform:uppercase;">ASVspoof 2019 LA</div>
-                      <h4 style="color:#FFFFFF; margin:6px 0;">Benchmark Dataset</h4>
-                      <p style="font-size:0.88rem; opacity:0.85; line-height:1.5;">Evaluated against logical access voice anti-spoofing benchmarks with EER assessment.</p>
-                    </div>
-                    """
-                )
-            with gr.Column(scale=1):
-                gr.Markdown(
-                    """
-                    <div class="saas-card-box">
-                      <div style="font-size:0.8rem; font-weight:700; color:#7CE7D6; text-transform:uppercase;">Paper 4 Augmentation</div>
-                      <h4 style="color:#FFFFFF; margin:6px 0;">Robust Augmentation</h4>
-                      <p style="font-size:0.88rem; opacity:0.85; line-height:1.5;">SpecAverage time-frequency masking paired with BCE loss minimization.</p>
-                    </div>
-                    """
-                )
-            with gr.Column(scale=1):
-                gr.Markdown(
-                    """
-                    <div class="saas-card-box">
-                      <div style="font-size:0.8rem; font-weight:700; color:#7CE7D6; text-transform:uppercase;">Paper 2 M2S-ADD</div>
-                      <h4 style="color:#FFFFFF; margin:6px 0;">Stereo Representation</h4>
-                      <p style="font-size:0.88rem; opacity:0.85; line-height:1.5;">Mono-to-stereo graph attention networks for spatial feature learning.</p>
-                    </div>
-                    """
-                )
-
-        # SECTION 9: FAQ (ACCORDION LAYOUT)
-        gr.Markdown("<div style='height:24px;'></div>")
-        gr.Markdown("<div class='section-title'>Frequently Asked Questions</div>")
-        with gr.Accordion("What audio file formats are supported by VoiceSentinel?", open=False):
-            gr.Markdown("VoiceSentinel supports WAV, MP3, and FLAC files. Audio is automatically normalized and resampled to 16,000 Hz for consistent neural inference.")
-        with gr.Accordion("What is the difference between Detection Modes A, B, C, and D?", open=False):
-            gr.Markdown("Mode A provides baseline mono LFCC analysis. Mode B applies SpecAverage data augmentation. Mode C uses Mono-to-Stereo (M2S) conversion with SincNet and Graph Attention Networks (GAT). Mode D integrates stereo log-spectrograms with a ResNet34 backbone.")
-        with gr.Accordion("How does Mono-to-Stereo (M2S) conversion detect voice spoofing?", open=False):
-            gr.Markdown("Synthetic speech engines often generate artifacts in spatial phase distribution. M2S converts mono waveforms into dual-channel representations, allowing graph neural networks to detect phase irregularities.")
-
-        # SECTION 10: FOOTER
-        gr.Markdown("<div style='height:36px;'></div>")
-        with gr.Row():
-            with gr.Column():
-                gr.Markdown(
-                    """
-                    <div style="border-top: 1px solid rgba(255,255,255,0.10); padding-top: 20px; text-align: center; font-size: 0.85rem; color: #DDE5F0; opacity: 0.75;">
-                      <div style="margin-bottom: 8px;"><strong>VoiceSentinel</strong> &bull; Industrial Audio Deepfake & Voice Authenticity Detection</div>
-                      <div>Built with PyTorch 2.0+, Torchaudio & Obsidian Chrome Design System</div>
-                    </div>
-                    """
-                )
-
-        # Connect callback
-        analyze_button.click(
-            fn=process_audio,
-            inputs=[audio_input, mode_dropdown],
-            outputs=[
-                pred_text,
-                conf_bar,
-                stats_markdown,
-                wave_plot,
-                fft_plot,
-                spec_plot,
-                lfcc_plot
-            ]
-        )
+    # Connect callback
+    analyze_button.click(
+        fn=process_audio,
+        inputs=[audio_input, mode_dropdown],
+        outputs=[
+            pred_text,
+            conf_bar,
+            stats_markdown,
+            wave_plot,
+            fft_plot,
+            spec_plot,
+            lfcc_plot
+        ]
+    )
 
 if __name__ == "__main__":
-    demo.launch( server_name="0.0.0.0",
-    server_port=int(os.environ.get("PORT", 7860)), share=True)
-
-
-
-
+    demo.launch(
+    server_name="0.0.0.0",
+    server_port=int(os.environ.get("PORT", 7860)),
+    allowed_paths=["/content/Voice_sentinel/scratch"]
+)
