@@ -8,20 +8,20 @@ from typing import Optional
 
 
 def _apply_dark_theme(fig: plt.Figure, ax: plt.Axes, title: str, xlabel: str, ylabel: str):
-    """Helper function to apply consistent modern dark styling to matplotlib figures."""
-    fig.patch.set_facecolor("#0b1329")
-    ax.set_facecolor("#0f172a")
+    """Helper function to apply consistent Obsidian Chrome styling to matplotlib figures."""
+    fig.patch.set_facecolor("#0A0A0A")  # Onyx
+    ax.set_facecolor("#12161A")        # Soft Metallic Slate
     
-    ax.set_title(title, fontsize=12, fontweight="bold", pad=12, color="#f8fafc")
-    ax.set_xlabel(xlabel, fontsize=10, fontweight="semibold", color="#cbd5e1")
-    ax.set_ylabel(ylabel, fontsize=10, fontweight="semibold", color="#cbd5e1")
+    ax.set_title(title, fontsize=11, fontweight="600", pad=10, color="#FFFFFF")   # White
+    ax.set_xlabel(xlabel, fontsize=9, fontweight="500", color="#E5E4E2")        # Alabaster Grey
+    ax.set_ylabel(ylabel, fontsize=9, fontweight="500", color="#E5E4E2")        # Alabaster Grey
     
-    ax.tick_params(colors="#94a3b8", labelsize=9)
-    ax.grid(True, linestyle=":", alpha=0.3, color="#475569")
+    ax.tick_params(colors="#E5E4E2", labelsize=8)
+    ax.grid(True, linestyle=":", alpha=0.2, color="#536878")  # Blue Slate
     
     for spine in ax.spines.values():
-        spine.set_color("#334155")
-        spine.set_linewidth(1.0)
+        spine.set_color("#536878")
+        spine.set_linewidth(0.8)
 
 
 def plot_waveform(
@@ -44,8 +44,8 @@ def plot_waveform(
     time_axis = np.arange(num_samples) / sample_rate
 
     fig, ax = plt.subplots(figsize=(10, 3.2), dpi=120)
-    ax.plot(time_axis, waveform_np, color="#38bdf8", linewidth=1.2, alpha=0.95)
-    ax.fill_between(time_axis, waveform_np, 0, color="#0284c7", alpha=0.25)
+    ax.plot(time_axis, waveform_np, color="#E5E4E2", linewidth=1.1)  # Alabaster Grey
+    ax.fill_between(time_axis, waveform_np, 0, color="#536878", alpha=0.25)  # Blue Slate
     
     _apply_dark_theme(fig, ax, title, "Time (seconds)", "Amplitude")
     ax.set_ylim(-1.05, 1.05)
@@ -77,8 +77,8 @@ def plot_fft(
     freqs = np.fft.rfftfreq(num_samples, d=1 / sample_rate)
 
     fig, ax = plt.subplots(figsize=(10, 3.2), dpi=120)
-    ax.plot(freqs, fft_magnitude, color="#fbbf24", linewidth=1.2, alpha=0.95)
-    ax.fill_between(freqs, fft_magnitude, 0, color="#d97706", alpha=0.2)
+    ax.plot(freqs, fft_magnitude, color="#FFFFFF", linewidth=1.1)  # White
+    ax.fill_between(freqs, fft_magnitude, 0, color="#536878", alpha=0.2)  # Blue Slate
     
     _apply_dark_theme(fig, ax, title, "Frequency (Hz)", "Magnitude")
     fig.tight_layout()
@@ -104,16 +104,23 @@ def plot_spectrogram(
     spec_np = spectrogram.detach().cpu().squeeze().numpy()
 
     fig, ax = plt.subplots(figsize=(10, 3.8), dpi=120)
-    img = ax.imshow(spec_np, aspect="auto", origin="lower", cmap="magma")
+    cmap_name = "magma"
+    try:
+        plt.get_cmap(cmap_name)
+    except ValueError:
+        cmap_name = "viridis"
+    img = ax.imshow(spec_np, aspect="auto", origin="lower", cmap=cmap_name)
     
     _apply_dark_theme(fig, ax, title, "Time Frames", ylabel)
     
-    # Add colorbar with dark styling
+    # Add colorbar with Obsidian Chrome styling
     cbar = fig.colorbar(img, ax=ax)
-    cbar.set_label("Magnitude (dB)", fontsize=9, fontweight="semibold", color="#cbd5e1")
-    cbar.ax.tick_params(colors="#94a3b8", labelsize=8)
-    cbar.outline.set_edgecolor("#334155")
+    cbar.set_label("Magnitude (dB)", fontsize=9, fontweight="500", color="#E5E4E2")
+    cbar.ax.tick_params(colors="#E5E4E2", labelsize=8)
+    cbar.outline.set_edgecolor("#536878")
     
     fig.tight_layout()
     return fig
+
+
 
