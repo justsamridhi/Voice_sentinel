@@ -433,7 +433,6 @@ with gr.Blocks(
                 gr.Markdown(
                     """
                     <div style="display:flex; align-items:center; gap:12px;">
-                      <span style="font-size:1.5rem;">🛡️</span>
                       <span style="font-size:1.25rem; font-weight:700; color:#FFFFFF; letter-spacing:-0.01em;">VoiceSentinel</span>
                       <span class="pill-chip" style="margin-left:8px;">v2.4 Production</span>
                     </div>
@@ -465,7 +464,7 @@ with gr.Blocks(
                         VoiceSentinel unifies robust mono-to-stereo graph attention neural networks and rich LFCC/spectrogram diagnostics into a premium defense suite.
                       </p>
                       <div style="display:flex; justify-content:center; gap:10px; flex-wrap:wrap;">
-                        <span class="pill-chip">🛡️ Research-Grade Anti-Spoofing</span>
+                        <span class="pill-chip">Research-Grade Anti-Spoofing</span>
                         <span class="pill-chip">🎧 Stereo Spatial Awareness</span>
                         <span class="pill-chip">⚡ Sub-Second Inference</span>
                       </div>
@@ -691,7 +690,7 @@ with gr.Blocks(
                 gr.Markdown(
                     """
                     <div style="border-top: 1px solid rgba(255,255,255,0.10); padding-top: 20px; text-align: center; font-size: 0.85rem; color: #DDE5F0; opacity: 0.75;">
-                      <div style="margin-bottom: 8px;">🛡️ <strong>VoiceSentinel</strong> &bull; Industrial Audio Deepfake & Voice Authenticity Detection</div>
+                      <div style="margin-bottom: 8px;"><strong>VoiceSentinel</strong> &bull; Industrial Audio Deepfake & Voice Authenticity Detection</div>
                       <div>Built with PyTorch 2.0+, Torchaudio & Obsidian Chrome Design System</div>
                     </div>
                     """
@@ -713,7 +712,8 @@ with gr.Blocks(
         )
 
 if __name__ == "__main__":
-    demo.launch(server_name="127.0.0.1", server_port=7860, share=True)
+    demo.launch( server_name="0.0.0.0",
+    server_port=int(os.environ.get("PORT", 7860)), share=True)
 
 
 
