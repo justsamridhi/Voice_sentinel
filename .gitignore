@@ -39,6 +39,22 @@ venv.bak/
 # Datasets
 /data/
 
+# Model checkpoints and weights
+checkpoints/
+*.pt
+*.pth
+*.ckpt
+*.h5
+*.onnx
+*.pb
+*.bin
+*.safetensors
+
+# Generated outputs
+outputs/
+results/
+wandb/
+lightning_logs/
 
 # Tensorboard
 /runs/
