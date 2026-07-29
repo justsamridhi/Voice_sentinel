@@ -39,9 +39,6 @@ venv.bak/
 # Datasets
 /data/
 
-# Model Checkpoints & Outputs
-/outputs/
-/outputs_ablation/
 
 # Tensorboard
 /runs/
